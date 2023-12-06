@@ -10,7 +10,7 @@ sumOfCalibration strings = sum $ map parseString strings
         parseString str = firstNum str * 10 + firstNum (reverse str)
         firstNum str = digitToInt $ Data.Maybe.fromMaybe '0' (find isDigit str)
 
-main :: IO ()
-main = do
+trebuchetMain :: IO ()
+trebuchetMain = do
     s <- readFile "trebuchet\\input.txt"
     print $ sumOfCalibration (lines s)

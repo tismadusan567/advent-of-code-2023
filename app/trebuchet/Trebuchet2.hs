@@ -37,7 +37,7 @@ findLastIndex :: (a -> Bool) -> [a] -> Maybe Int
 findLastIndex pred str = if null indices then Nothing else Just (last indices)
     where indices = findIndices pred str
 
-main :: IO ()
-main = do
-    s <- readFile "trebuchet\\input.txt"
+trebuchet2Main :: IO ()
+trebuchet2Main = do
+    s <- readFile "app\\trebuchet\\input.txt"
     print $ sumOfCalibration (lines s)
