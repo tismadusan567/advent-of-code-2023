@@ -1,7 +1,7 @@
 module Cube where
 
 import Data.List.Split
-import Data.Map.Strict (fromList, (!), Map)
+import Data.Map.Strict (fromList, (!), Map, keys)
 import Data.Maybe
 
 sumOfGameIds :: [String] -> Int
@@ -11,8 +11,8 @@ validGame :: String -> Maybe Int
 validGame str = if validMoves moves then Just gameId else Nothing
     where (gameId, moves) = parseGame str
 
-parseGame :: String -> (Int, String)
-parseGame str = (gameId, moves)
+parseGame :: String -> (Int, [Map String Int])
+parseGame str = (gameId, parseMoves moves)
     where 
         [game, moves]= splitOn ":" str
         gameId = read $ (words $ game) !! 1
@@ -25,11 +25,11 @@ parseMove move = fromList $ map parseEntry (splitOn "," move)
     where 
         parseEntry entry = let [num, color] = words entry in (color, read num)
 
-validMoves :: String -> Bool
-validMoves str = foldl validSet True (splitOn ";" str)
+validMoves :: [Map String Int] -> Bool
+validMoves moves = foldl validMove True moves
     where 
-        validSet acc set = if acc then foldl validEntry True (splitOn "," set) else False
-        validEntry acc entry = let [num, color] = words entry in if acc then (read num) <= (colorMap ! color) else False
+        validMove acc move = if acc then foldl (validColor move) True (keys move) else False
+        validColor move acc color = if acc then move ! color <= colorMap ! color else False
         colorMap = fromList [("blue", 14), ("green", 13), ("red", 12)]
 
 cubeMain :: IO ()
